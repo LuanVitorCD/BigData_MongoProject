@@ -168,14 +168,14 @@ def load_model_from_db(_db_client, model_id):
 
 # --- Interface do Streamlit ---
 
-st.title("🧠 MongoDB como Cache Inteligente para Modelos Preditivos")
+st.title("MongoDB como Cache Inteligente para Modelos Preditivos")
 st.markdown("Este aplicativo demonstra como o MongoDB pode ser usado para armazenar diferentes versões de modelos de Machine Learning e carregá-los dinamicamente com base em um contexto, como o tipo de usuário.")
 
 # Inicializa a conexão
 client = get_mongo_client()
 
 # --- Seção de Administração (Treinamento) ---
-with st.expander("🔧 Painel de Administração: Treinamento dos Modelos"):
+with st.expander("Painel de Administração: Treinamento dos Modelos"):
     st.info("Esta seção simula o processo de engenharia de ML, onde modelos são treinados e versionados. Clique no botão para treinar dois modelos distintos e salvá-los no MongoDB.")
     if st.button("Treinar e Salvar Modelos no MongoDB"):
         train_and_save_models(client)
@@ -184,7 +184,7 @@ with st.expander("🔧 Painel de Administração: Treinamento dos Modelos"):
 st.divider()
 
 # --- Seção de Predição (Aplicação) ---
-st.header("🔮 Simulação de Predição em Tempo Real")
+st.header("Simulação de Predição em Tempo Real")
 st.markdown("Selecione um tipo de usuário e insira os dados para ver qual modelo é carregado do MongoDB para fazer a predição.")
 
 col1, col2 = st.columns([1, 2])
