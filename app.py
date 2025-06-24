@@ -22,11 +22,25 @@ if col.count_documents({}) == 0:
     ])
 
 # FastAPI app
-app = FastAPI()
+app = FastAPI(
+    title="Model Cache IA",
+    description="""
+    Esta é uma API simples de demonstração para um sistema de cache de modelos preditivos com MongoDB.
+
+    A API permite enviar um perfil de usuário (como 'novato' ou 'premium') e uma lista de features (valores numéricos) para que o modelo correspondente seja carregado automaticamente do MongoDB e uma predição seja realizada.
+
+    ▶ Acesse o endpoint `/predict` via POST para testar.
+    ▶ Use `/` para ver se a aplicação está online.
+    """,
+    version="1.0.0"
+)
 
 @app.get("/")
 def root():
-    return {"status": "online"}
+    return {
+        "status": "online",
+        "description": "Este projeto demonstra um cache de modelos preditivos simples em MongoDB. Envie uma requisição POST para /predict com um perfil (novato ou premium) e uma lista de features para receber uma predição. Veja mais em /docs."
+    }
 
 class Request(BaseModel):
     profile: str

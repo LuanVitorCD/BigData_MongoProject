@@ -1,5 +1,7 @@
 # BigData_MongoProject - Model Cache IA com MongoDB
 
+ Acesse a versão online do projeto aqui: https://bigdata-mongoproject-1.onrender.com/
+
 Projeto de exemplo que implementa um cache inteligente de modelos preditivos usando MongoDB.
 
 ## 1.1 Pré-requisitos
@@ -13,3 +15,4 @@ git clone <repo-url>
 cd model-cache-ia
 pip install -r requirements.txt
 cp .env.example .env   # e preencha MONGODB_URI
+python app.py
