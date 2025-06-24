@@ -14,19 +14,6 @@ client = MongoClient(MONGODB_URI)
 db = client[DB_NAME]
 col = db[COLLECTION_NAME]
 
-# Popular o banco se vazio
-@app.on_event("startup")
-def init_db():
-    try:
-        if col.count_documents({}) == 0:
-            col.insert_many([
-                {"_id": "novato",  "weights": [0.1, 0.2, 0.3], "bias": 0.5},
-                {"_id": "premium", "weights": [0.4, 0.5, 0.6], "bias": 1.0}
-            ])
-            print("📦 Modelos inseridos com sucesso.")
-    except Exception as e:
-        print(f"Erro ao conectar com MongoDB: {e}")
-
 # FastAPI app
 app = FastAPI(
     title="Model Cache IA",
@@ -40,6 +27,26 @@ app = FastAPI(
     """,
     version="1.0.0"
 )
+
+@app.on_event("startup")
+def init_db():
+    try:
+        if col.count_documents({}) == 0:
+            from sklearn.linear_model import LinearRegression
+            import numpy as np
+
+            X = np.array([[1, 2, 3], [2, 1, 0]])
+            y = np.array([1.8, 3.2])
+            model = LinearRegression().fit(X, y)
+
+            col.insert_one({
+                "_id": "modelo_ml",
+                "weights": model.coef_.tolist(),
+                "bias": model.intercept_.item()
+            })
+            print("✅ Modelo treinado e inserido com sucesso")
+    except Exception as e:
+        print(f"Erro ao conectar ou inserir no MongoDB: {e}")
 
 @app.get("/")
 def root():
@@ -57,5 +64,9 @@ def predict(req: Request):
     model = col.find_one({"_id": req.profile})
     if not model:
         raise HTTPException(status_code=404, detail="Perfil não encontrado")
-    result = sum(f*w for f, w in zip(req.features, model["weights"])) + model["bias"]
+    import numpy as np
+    weights = np.array(model["weights"])
+    bias = model["bias"]
+    features = np.array(req.features)
+    result = float(np.dot(features, weights) + bias)
     return {"profile": req.profile, "prediction": result}
