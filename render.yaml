@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: model-cache-api
+    env: python
+    region: oregon  # ou sua região
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "uvicorn server:app --host 0.0.0.0 --port $PORT"
