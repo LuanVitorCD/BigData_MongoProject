@@ -15,11 +15,17 @@ db = client[DB_NAME]
 col = db[COLLECTION_NAME]
 
 # Popular o banco se vazio
-if col.count_documents({}) == 0:
-    col.insert_many([
-        {"_id": "novato",  "weights": [0.1, 0.2, 0.3], "bias": 0.5},
-        {"_id": "premium", "weights": [0.4, 0.5, 0.6], "bias": 1.0}
-    ])
+@app.on_event("startup")
+def init_db():
+    try:
+        if col.count_documents({}) == 0:
+            col.insert_many([
+                {"_id": "novato",  "weights": [0.1, 0.2, 0.3], "bias": 0.5},
+                {"_id": "premium", "weights": [0.4, 0.5, 0.6], "bias": 1.0}
+            ])
+            print("📦 Modelos inseridos com sucesso.")
+    except Exception as e:
+        print(f"Erro ao conectar com MongoDB: {e}")
 
 # FastAPI app
 app = FastAPI(
